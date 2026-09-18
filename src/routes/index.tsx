@@ -61,11 +61,12 @@ function Dashboard() {
   const [running, setRunning] = useState(false);
   const [thermal, setThermal] = useState(false);
   const [showVictims, setShowVictims] = useState(true);
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState<Date | null>(null);
   const [agency, setAgency] = useState<AgencyState>("standby");
   const timers = useRef<number[]>([]);
 
   useEffect(() => {
+    setTime(new Date());
     const clock = window.setInterval(() => setTime(new Date()), 1000);
     return () => window.clearInterval(clock);
   }, []);
@@ -102,7 +103,7 @@ function Dashboard() {
   };
 
   const step = Math.min(7, phase);
-  const timestamp = time.toLocaleTimeString("en-GB", { hour12: false });
+  const timestamp = time?.toLocaleTimeString("en-GB", { hour12: false }) ?? "--:--:--";
   const incidentActive = floor === 14 && phase > 0;
 
   return (
