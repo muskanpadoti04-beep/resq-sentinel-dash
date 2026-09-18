@@ -6,4 +6,4 @@
 - [x] Build the indoor floor plan and staged fire prediction
 - [x] Build victim overlays, evacuation paths, responder path, and rerouting
 - [x] Build multi-agency dispatch and seven-stage system flow
-- [ ] Validate desktop and mobile simulations in the browser
+- [x] Validate desktop and mobile simulations in the browser
