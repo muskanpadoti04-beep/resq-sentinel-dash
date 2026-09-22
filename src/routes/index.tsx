@@ -94,14 +94,15 @@ function Dashboard() {
     setPhase(1);
     setRunning(true);
     setCameraOpen(false);
-    [
+    const schedule: Array<[number, number]> = [
       [900, 2],
       [2100, 3],
       [3500, 4],
       [5200, 5],
       [6900, 6],
       [8700, 7],
-    ].forEach(([delay, next]) => {
+    ];
+    schedule.forEach(([delay, next]) => {
       timers.current.push(window.setTimeout(() => {
         setPhase(next);
         if (next === 7) setRunning(false);
