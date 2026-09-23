@@ -87,6 +87,19 @@ function Dashboard() {
 
   useEffect(() => () => clearTimers(), []);
 
+  useEffect(() => {
+    if (!cameraOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setCameraOpen(false);
+    };
+    document.body.classList.add("camera-modal-open");
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.classList.remove("camera-modal-open");
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [cameraOpen]);
+
   const simulate = () => {
     clearTimers();
     setFloor("14");
@@ -179,12 +192,13 @@ function Dashboard() {
         </aside>
 
         <section className="bottom-row">
-          <LiveCamera phase={phase} open={cameraOpen} openCamera={() => setCameraOpen(true)} closeCamera={() => setCameraOpen(false)} />
+          <LiveCamera phase={phase} openCamera={() => setCameraOpen(true)} />
           <RecentAlerts phase={phase} />
           <BuildingOverview phase={phase} />
           <SimulationControls running={running} phase={phase} simulate={simulate} reset={reset} />
         </section>
       </section>
+      {cameraOpen && <CameraGallery phase={phase} closeCamera={() => setCameraOpen(false)} />}
     </main>
   );
 }
@@ -260,6 +274,19 @@ function FloorLayer({ y, label, active, incident = false, phase = 0 }: { y: numb
       <path d={`M484 ${y - 30} 731 ${y + 31}`} />
       <path d={`M247 ${y + 42} 496 ${y + 117}`} />
       <path d={`M466 ${y - 25} 717 ${y + 36}`} />
+    </g>
+    <g className="building-details">
+      <path className="stair-core" d={`M203 ${y + 36} 260 ${y + 51} 242 ${y + 72} 185 ${y + 57}Z`} />
+      <path className="stair-step" d={`M193 ${y + 57} 235 ${y + 68}M199 ${y + 51} 241 ${y + 62}M205 ${y + 45} 247 ${y + 56}`} />
+      <path className="service-core" d={`M690 ${y + 20} 749 ${y + 35} 720 ${y + 58} 661 ${y + 43}Z`} />
+      <g className="desk-clusters">
+        <path d={`M293 ${y + 37}h28l12 8-28 8Z`} />
+        <path d={`M535 ${y + 16}h32l12 8-31 9Z`} />
+        <path d={`M603 ${y + 45}h30l11 8-29 8Z`} />
+      </g>
+      <g className="support-columns">
+        <circle cx="278" cy={y + 61} r="3" /><circle cx="380" cy={y + 34} r="3" /><circle cx="580" cy={y + 61} r="3" /><circle cx="680" cy={y + 31} r="3" />
+      </g>
     </g>
     <g className="room-windows">
       {Array.from({ length: 13 }, (_, i) => <rect key={i} x={220 + i * 42} y={y + 82 + (i % 2) * 4} width="10" height="18" />)}
@@ -349,12 +376,9 @@ function MiniMap({ floor, setFloor, phase }: { floor: FloorId; setFloor: (value:
   </Panel>;
 }
 
-function LiveCamera({ phase, open, openCamera, closeCamera }: { phase: number; open: boolean; openCamera: () => void; closeCamera: () => void }) {
-  const active = phase > 0;
-  return <Panel className={`live-camera ${open ? "expanded" : ""}`}>
-    <div className="mini-head"><span><i/>Live Camera</span><button onClick={open ? closeCamera : openCamera}>{open ? "Close" : "View All"}</button></div>
-    <div className="camera-thumb">
-      <svg viewBox="0 0 300 130" role="img" aria-label="Live indoor camera feed">
+function CameraScene({ active, camera, room }: { active: boolean; camera: string; room: string }) {
+  return <div className="camera-thumb">
+      <svg viewBox="0 0 300 130" role="img" aria-label={`${camera} live feed from ${room}`}>
         <rect width="300" height="130" className="cam-bg" />
         <path className="cam-ceiling" d="M0 0h300l-82 51H82Z" />
         <path className="cam-floor" d="M0 130h300l-82-79H82Z" />
@@ -362,9 +386,34 @@ function LiveCamera({ phase, open, openCamera, closeCamera }: { phase: number; o
         <path className="cam-grid" d="M0 130 150 51 300 130M82 51 0 0M218 51 300 0" />
         {active && <g><ellipse className="cam-fire-glow" cx="155" cy="83" rx="54" ry="42"/><path className="cam-fire" d="M154 103c-25-10-20-38-5-50 2 14 10 17 11 28 6-11 7-25 1-38 26 22 34 52 11 63-7 4-12 1-18-3Z"/><rect className="cam-detect" x="109" y="42" width="82" height="67"/><text x="119" y="36">Fire Detected</text></g>}
       </svg>
-      <span className="room-tag">Room 14B-201</span><time>14:28</time>
+      <span className="camera-id">{camera}</span><span className="room-tag">{room}</span><time>LIVE</time>
     </div>
+}
+
+function LiveCamera({ phase, openCamera }: { phase: number; openCamera: () => void }) {
+  return <Panel className="live-camera">
+    <div className="mini-head"><span><i/>Live Camera</span><button onClick={openCamera}>View All</button></div>
+    <CameraScene active={phase > 0} camera="CAM-14B-04" room="Room 14B-201" />
   </Panel>;
+}
+
+function CameraGallery({ phase, closeCamera }: { phase: number; closeCamera: () => void }) {
+  const cameras = [
+    { id: "CAM-14B-04", room: "Room 14B-201", active: phase > 0 },
+    { id: "CAM-14C-02", room: "East Corridor", active: phase >= 3 },
+    { id: "CAM-14A-01", room: "West Stairwell", active: false },
+    { id: "CAM-GF-01", room: "Main Entrance", active: false },
+  ];
+  return <div className="camera-modal" role="dialog" aria-modal="true" aria-labelledby="camera-gallery-title" onMouseDown={(event) => {
+    if (event.target === event.currentTarget) closeCamera();
+  }}>
+    <section className="camera-gallery">
+      <header><div><span className="gallery-live"><i />Live surveillance</span><h2 id="camera-gallery-title">All Camera Feeds</h2><p>Floor 14 incident coverage and evacuation access points</p></div><button aria-label="Close camera feeds" onClick={closeCamera}>×</button></header>
+      <div className="camera-grid">
+        {cameras.map((camera) => <article key={camera.id} className={camera.active ? "camera-card alert" : "camera-card"}><CameraScene active={camera.active} camera={camera.id} room={camera.room}/><footer><span>{camera.active ? "Detection active" : "Monitoring"}</span><b>{camera.active ? "ALERT" : "ONLINE"}</b></footer></article>)}
+      </div>
+    </section>
+  </div>;
 }
 
 function RecentAlerts({ phase }: { phase: number }) {
