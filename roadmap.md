@@ -7,3 +7,7 @@
 - [x] Build victim overlays, evacuation paths, responder path, and rerouting
 - [x] Build multi-agency dispatch and seven-stage system flow
 - [x] Validate desktop and mobile simulations in the browser
+- [x] Make View All open every live camera feed
+- [x] Restore comfortable dashboard spacing and independent panel scrolling
+- [x] Improve the layered building detail and scale
+- [x] Revalidate the updated desktop and mobile dashboard
