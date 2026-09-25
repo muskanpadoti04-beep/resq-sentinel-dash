@@ -330,7 +330,7 @@ function BuildingMap({ floor, setFloor, phase, layers, mode, setMode, navigating
       </g>}
 
       {floor === "14" && layers.occupants && <g className="people">
-        {[[505, 214], [520, 222], [556, 216], [566, 206]].map(([x, y], i) => <Person key={i} x={x} y={y} tone="danger" />)}
+        {([[505, 214], [520, 222], [556, 216], [566, 206]] as [number, number][]).map(([x, y], i) => <Person key={i} x={x} y={y} tone="danger" />)}
         <Person x={640} y={196} tone="warning" />
         <Person x={360} y={212} tone="warning" /><Person x={376} y={218} tone="warning" />
       </g>}
@@ -503,6 +503,7 @@ function TeamsCard({ open, onAll }: { open: (id: string) => void; onAll: () => v
 
 function MedicalCard({ onOpen, onDetails }: { onOpen: () => void; onDetails: () => void }) {
   const h = hospitals[0];
+  if (!h) return null;
   return <Panel className="medical-card">
     <CardHead icon="hospital" title="Medical & Hospital" action="View Details" onAction={onDetails} />
     <div className="med-top"><Icon name="truck" size={26} /><span><strong>1 / 3</strong><small>Ambulances Assigned</small></span></div>
@@ -558,7 +559,8 @@ function ModalView({ modal, phase, close, open }: { modal: NonNullable<Modal>; p
       <h4>Occupants assigned</h4><OccTable list={occupants.filter((o) => o.team === t.id)} open={open} /></>;
   } else if (modal.kind === "cameras" || modal.kind === "camera") {
     const list = modal.kind === "camera" ? cameras.filter((c) => c.id === modal.id) : cameras;
-    title = modal.kind === "camera" ? list[0].id : "All Camera Feeds"; sub = "Floor 14 incident coverage and access points";
+    const selectedCamera = list[0];
+    title = modal.kind === "camera" ? selectedCamera?.id ?? "Camera Feed" : "All Camera Feeds"; sub = "Floor 14 incident coverage and access points";
     body = <div className={modal.kind === "camera" ? "camera-grid single" : "camera-grid"}>{list.map((c) => <article key={c.id} className={phase >= c.fire ? "camera-card alert" : "camera-card"}><CameraScene active={phase >= c.fire} camera={c.id} room={c.room} /><footer><span>{c.room}</span><b>{phase >= c.fire ? "ALERT" : "ONLINE"}</b></footer></article>)}</div>;
   } else if (modal.kind === "hospital") {
     title = "Hospital Route"; sub = "Building → City General Hospital";
