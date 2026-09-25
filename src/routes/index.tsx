@@ -299,6 +299,9 @@ function BuildingMap({ floor, setFloor, phase, layers, mode, setMode, navigating
     <svg className="building-svg" viewBox="0 0 940 610" role="img" aria-label="Layered building map with occupants">
       <defs>
         <linearGradient id="glassTop" x1="0" y1="0" x2="1" y2="1"><stop stopColor="var(--map-glass-high)" /><stop offset="1" stopColor="var(--map-glass-low)" /></linearGradient>
+        <linearGradient id="glassSide" x1="0" y1="0" x2="0" y2="1"><stop stopColor="var(--map-side-high)" /><stop offset="1" stopColor="var(--map-side-low)" /></linearGradient>
+        <linearGradient id="routeGlow" x1="0" y1="0" x2="1" y2="0"><stop stopColor="var(--safe)" /><stop offset="1" stopColor="var(--route-bright)" /></linearGradient>
+        <linearGradient id="miniGlass" x1="0" y1="0" x2="1" y2="1"><stop stopColor="var(--map-glass-high)" /><stop offset="1" stopColor="var(--map-side-low)" /></linearGradient>
         <radialGradient id="fireGlow"><stop stopColor="var(--fire-core)" /><stop offset=".35" stopColor="var(--hazard)" /><stop offset="1" stopColor="transparent" /></radialGradient>
         <filter id="softGlow"><feGaussianBlur stdDeviation="4" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
       </defs>
@@ -388,10 +391,14 @@ function FloorLayer({ y, label, active, incident = false, phase = 0, layers }: {
     <g className="rooms-grid">
       <path d={`M248 ${y + 42} 468 ${y - 25} 717 ${y + 36} 495 ${y + 117}Z`} />
       <path d={`M338 ${y + 66} 558 ${y - 2}`} /><path d={`M427 ${y + 90} 647 ${y + 23}`} /><path d={`M365 ${y + 6} 610 ${y + 66}`} />
+      <text x="280" y={y + 54}>A Wing</text><text x="465" y={y + 20}>B Wing</text><text x="612" y={y + 54}>C Wing</text>
     </g>
     <g className="building-details">
       <path className="stair-core" d={`M203 ${y + 36} 260 ${y + 51} 242 ${y + 72} 185 ${y + 57}Z`} />
       <path className="service-core" d={`M690 ${y + 20} 749 ${y + 35} 720 ${y + 58} 661 ${y + 43}Z`} />
+      <path className="stair-step" d={`M196 ${y + 44} 250 ${y + 58}M191 ${y + 51} 245 ${y + 66}M212 ${y + 39} 197 ${y + 59}M234 ${y + 46} 218 ${y + 67}`} />
+      <g className="desk-clusters"><path d={`M310 ${y + 51} 350 ${y + 39} 383 ${y + 47} 342 ${y + 60}Z`} /><path d={`M520 ${y + 34} 562 ${y + 22} 602 ${y + 32} 559 ${y + 45}Z`} /></g>
+      <g className="support-columns"><circle cx="298" cy={y + 76} r="3" /><circle cx="430" cy={y + 38} r="3" /><circle cx="584" cy={y + 74} r="3" /><circle cx="700" cy={y + 24} r="3" /></g>
     </g>
     <g className="room-windows">
       {Array.from({ length: 13 }, (_, i) => <rect key={i} x={220 + i * 42} y={y + 82 + (i % 2) * 4} width="10" height="18" />)}
