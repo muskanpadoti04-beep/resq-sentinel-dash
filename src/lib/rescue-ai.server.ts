@@ -14,7 +14,7 @@ export type RescueAction = {
 };
 export type RescuePlan = { summary: string; actions: RescueAction[]; warnings: string[] };
 
-export async function generateRescuePlan(apiKey: string, messages: ModelMessage[]): Promise<RescuePlan> {
+export async function generateRescuePlan(apiKey: string, instructions: string, messages: ModelMessage[]): Promise<RescuePlan> {
   const provider = createOpenAI({
     baseURL: GATEWAY,
     apiKey,
@@ -27,6 +27,7 @@ export async function generateRescuePlan(apiKey: string, messages: ModelMessage[
       console.error("rescue-ai stream error", error);
     },
     model: provider.responses(MODEL),
+    instructions,
     messages,
     providerOptions: {
       openai: {

@@ -14,14 +14,13 @@ const SYSTEM = `You are an incident-command assistant for indoor building fires.
 {"summary": string, "warnings": string[], "actions": [{"priority": number, "urgency": "Immediate"|"High"|"Moderate", "action": string, "target": string, "assignee": string, "reason": string}]}`;
 
 export const getRescueActions = createServerFn({ method: "POST" })
-  .inputValidator((d) => Input.parse(d))
+  .validator((d) => Input.parse(d))
   .handler(async ({ data }): Promise<{ plan: RescuePlan | null; error: string | null }> => {
     const key = process.env['LOVABLE_API_KEY'];
     if (!key) return { plan: null, error: "AI is not configured for this app." };
     const occ = data.occupants.map((o) => `- ${o.id} in ${o.room} [${o.status}]: ${o.condition || "no update"}`).join("\n");
     try {
-      const plan = await generateRescuePlan(key, [
-        { role: "system", content: SYSTEM },
+      const plan = await generateRescuePlan(key, SYSTEM, [
         { role: "user", content: `Situation:\n${data.context}\n\nCommander updates:\n${data.updates || "(none)"}\n\nOccupant conditions:\n${occ}` },
       ]);
       return { plan, error: null };
