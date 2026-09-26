@@ -13,3 +13,4 @@
 - [x] Revalidate the updated desktop and mobile dashboard
 - [ ] Add Occupant Intelligence
 - [ ] Rebuild dashboard like new reference (KPI strip, map layers, active incident, occupants, teams, medical, cameras, timeline) with all clicks opening full data
+- [x] Add AI Command: commander updates + occupant conditions → AI prioritized rescue actions
