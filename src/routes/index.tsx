@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { AiCommand } from "@/components/AiCommand";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/")({
 });
 
 type FloorId = "15" | "14" | "13" | "G";
-type ViewId = "map" | "building" | "occupants" | "teams" | "medical" | "analytics" | "reports";
+type ViewId = "map" | "building" | "occupants" | "teams" | "medical" | "analytics" | "reports" | "command";
 type Tone = "danger" | "warning" | "safe" | "info" | "muted";
 type LayerId = "occupants" | "fire" | "heatmap" | "routes" | "blocked" | "sensors" | "cameras";
 type Status = "Critical" | "High Risk" | "Safe";
@@ -72,6 +73,7 @@ const navItems: { id: ViewId; label: string; icon: IconName }[] = [
   { id: "medical", label: "Medical", icon: "hospital" },
   { id: "analytics", label: "Analytics", icon: "chart" },
   { id: "reports", label: "Reports", icon: "report" },
+  { id: "command", label: "AI Command", icon: "nav" },
 ];
 
 type Occupant = { id: string; name: string; kind: "Human" | "Dog"; floor: FloorId; room: string; status: Status; mobility: string; source: string; confidence: number; lastSeen: string; heat: string; team: string };
@@ -599,6 +601,7 @@ function DetailWorkspace({ view, phase, open }: { view: Exclude<ViewId, "map" | 
     medical: ["Medical & Hospital Support", "Nearby hospitals, ambulance assignment and triage readiness.", "hospital"],
     analytics: ["Incident Analytics", "Model confidence and risk indicators for the current incident.", "chart"],
     reports: ["Response Report", "Generated command record for operations teams.", "report"],
+    command: ["AI Rescue Command", "Log incident updates and occupant conditions; Lovable AI returns prioritized rescue actions.", "nav"],
   };
   const [title, desc, icon] = meta[view];
   let body: ReactNode = null;
@@ -613,6 +616,8 @@ function DetailWorkspace({ view, phase, open }: { view: Exclude<ViewId, "map" | 
   } else if (view === "analytics") {
     const values: [string, number][] = [["Detection Confidence", phase > 0 ? 96 : 11], ["Spread Risk", phase > 2 ? 82 : 18], ["Occupancy Certainty", phase > 1 ? 93 : 34], ["Route Safety (Stair B)", phase > 5 ? 88 : 99], ["Stair A Safety", phase >= 4 ? 12 : 95]];
     body = <div className="analytics-list">{values.map(([label, value]) => <div className="analytics-row" key={label}><div><span>{label}</span><strong>{value}%</strong></div><i><b style={{ width: `${value}%` }} /></i></div>)}</div>;
+  } else if (view === "command") {
+    body = <AiCommand occupants={occupants} context={`Incident RQ-2291, Floor 14. Fire origin Room 14B-201. Stair A ${phase >= 4 ? "BLOCKED" : "open"}, Stair B available. Teams: ${teams.map((t) => `${t.id} (${t.lead}, ${t.members}) ${t.status} -> ${t.target}`).join("; ")}. Ambulance AMB-01 at main entrance; City General Hospital recommended.`} />;
   } else {
     body = <div className="report-sheet"><h3>Incident RQ-2291</h3><p>AI detected a fire signature in Room 14B-201, identified 12 occupants (7 at risk incl. 1 dog), blocked Stair A and routed Team B via Stair B. Ambulance AMB-01 is assigned to City General Hospital.</p><dl><div><dt>Status</dt><dd>{phase >= 7 ? "Units dispatched" : phase > 0 ? "In progress" : "Draft"}</dd></div><div><dt>Affected zones</dt><dd>14B-201, 14B-202, 14B-204, Corridor 14B</dd></div><div><dt>Recommended action</dt><dd>Evacuate via Stair B; responders through main entrance.</dd></div></dl><Button onClick={() => window.print()}><Icon name="report" size={15} />Print report</Button></div>;
   }

@@ -8,3 +8,4 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+- AI rescue planning runs server-side in src/lib/rescue-ai.* via Lovable AI Gateway (openai/gpt-6-astra, Responses API) — keeps the API key off the browser.
