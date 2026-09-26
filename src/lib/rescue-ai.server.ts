@@ -39,7 +39,7 @@ export async function generateRescuePlan(apiKey: string, instructions: string, m
       },
     },
   });
-  const text = await result.text.catch((e) => { throw streamError ?? e; });
+  const text = await Promise.resolve(result.text).catch((e: unknown) => { throw streamError ?? e; });
   if (!text && streamError) throw streamError;
   const match = text.match(/\{[\s\S]*\}/);
   if (!match) throw new Error("The AI did not return a rescue plan. Please try again.");
