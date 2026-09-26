@@ -16,7 +16,7 @@ const SYSTEM = `You are an incident-command assistant for indoor building fires.
 export const getRescueActions = createServerFn({ method: "POST" })
   .inputValidator((d) => Input.parse(d))
   .handler(async ({ data }): Promise<{ plan: RescuePlan | null; error: string | null }> => {
-    const key = process.env.LOVABLE_API_KEY;
+    const key = process.env['LOVABLE_API_KEY'];
     if (!key) return { plan: null, error: "AI is not configured for this app." };
     const occ = data.occupants.map((o) => `- ${o.id} in ${o.room} [${o.status}]: ${o.condition || "no update"}`).join("\n");
     try {
