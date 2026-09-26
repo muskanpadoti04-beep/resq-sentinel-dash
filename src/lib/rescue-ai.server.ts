@@ -20,7 +20,12 @@ export async function generateRescuePlan(apiKey: string, messages: ModelMessage[
     apiKey,
     headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
   });
+  let streamError: unknown;
   const result = streamText({
+    onError: ({ error }) => {
+      streamError = error;
+      console.error("rescue-ai stream error", error);
+    },
     model: provider.responses(MODEL),
     messages,
     providerOptions: {
@@ -33,7 +38,8 @@ export async function generateRescuePlan(apiKey: string, messages: ModelMessage[
       },
     },
   });
-  const text = await result.text;
+  const text = await result.text.catch((e) => { throw streamError ?? e; });
+  if (!text && streamError) throw streamError;
   const match = text.match(/\{[\s\S]*\}/);
   if (!match) throw new Error("The AI did not return a rescue plan. Please try again.");
   const parsed = JSON.parse(match[0]) as RescuePlan;
