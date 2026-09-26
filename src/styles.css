@@ -199,3 +199,5 @@ button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible
 .ai-actions small{color:var(--muted-foreground);font-size:.75rem}
 .ai-actions p{margin:4px 0 0;font-size:.8rem;color:var(--muted-foreground)}
 .ai-rank{font-family:var(--font-mono);font-weight:700;color:var(--hazard);min-width:28px}
+.oi-topbar .topnav{min-width:0;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+.oi-topbar .topnav button{flex-shrink:0}
