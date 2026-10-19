@@ -63,7 +63,7 @@ export function CutawayBuilding({ floor, phase, layers, navigating, occupants, s
       </defs>
       <polygon className="cut-site" points="80,568 354,677 879,511 611,398" />
       <path className="cut-road" d="M55 622 350 712 907 552" />
-      <g className="cut-landscape">{[ [145, 560], [112, 580], [736, 578], [800, 556], [848, 537] ].map(([x, y], i) => <g key={i}><path d={`M${x} ${y}v-20`} /><path d={`M${x - 11} ${y - 15}l11-28 11 28Z`} /></g>)}</g>
+      <g className="cut-landscape">{[ [145, 560], [112, 580], [736, 578], [800, 556], [848, 537] ].map(([x = 0, y = 0], i) => <g key={i}><path d={`M${x} ${y}v-20`} /><path d={`M${x - 11} ${y - 15}l11-28 11 28Z`} /></g>)}</g>
       <g className="cut-foundation"><polygon points={box(0, 0, 460, 220, 525)} /></g>
       {levels.map(level => {
         const selected = level.id === floor;
@@ -123,10 +123,10 @@ export function CutawayBuilding({ floor, phase, layers, navigating, occupants, s
           {selected && layers.routes && <path className="cut-evac-route" d={`M${point(175, 100, base, 2)}L${point(175, 120, base, 2)}L${point(429, 120, base, 2)}L${point(429, 155, base, 2)}`} />}
           {selected && layers.sensors && [105, 240, 360].map(u => { const [x, y] = point(u, 120, base, 25); return <circle key={u} className="cut-sensor" cx={x} cy={y} r="5" />; })}
           {selected && layers.cameras && [90, 330].map(u => { const [x, y] = point(u, 95, base, 60); return <g key={u} className="cut-camera" transform={`translate(${x} ${y})`}><rect width="12" height="7" rx="1" /><path d="M12 1l5-3v11l-5-3M4 7v6" /></g>; })}
-          {burning && layers.fire && <g className="cut-incident-label" transform="translate(719 190)"><path d="M0 15L-69 59" /><rect width="188" height="53" rx="6" /><text x="12" y="19">FIRE DETECTED</text><text x="12" y="35">14B-201 · Server Room</text><text x="12" y="47">{phase >= 3 ? "Spreading" : "Detected"} · {phase >= 5 ? "89°C" : "78°C"}</text></g>}
         </g>;
       })}
       <g className="cut-roof"><polygon points={box(0, 0, 460, 220, 105)} />{[60, 190, 310].map(u => <g key={u}><polygon className="cut-hvac-side" points={polygon([[u, 120, 0], [u + 56, 120, 0], [u + 56, 120, 20], [u, 120, 20]], 105)} /><polygon className="cut-hvac" points={box(u, 120, 56, 36, 105, 20)} /><path className="cut-hvac-grille" d={`M${point(u + 7, 128, 105, 20)}L${point(u + 47, 128, 105, 20)}M${point(u + 7, 138, 105, 20)}L${point(u + 47, 138, 105, 20)}`} /></g>)}<path className="cut-antenna" d={`M${point(390, 170, 105)}v-66m-12 20h24m-18-10h12`} /></g>
+      {incident && layers.fire && <g className="cut-incident-label" transform="translate(725 130)"><path d="M0 45L-250 168" /><rect width="188" height="53" rx="6" /><text x="12" y="19">FIRE DETECTED</text><text x="12" y="35">14B-201 · Server Room</text><text x="12" y="47">{phase >= 3 ? "Spreading" : "Detected"} · {phase >= 5 ? "89°C" : "78°C"}</text></g>}
       {navigating && layers.routes && <path className="cut-responder-route" d="M570 644 704 614 784 530 784 330 730 310" />}
       <g className="cut-engine" transform="translate(250 634)"><path d="M0-27h85l23 16v27H0Z" /><rect x="8" y="-21" width="52" height="13" /><path d="M70-20h12l15 12H70Z" /><path className="cut-engine-ladder" d="M7-33h70m-60-4v9m12-9v9m12-9v9m12-9v9" /><circle cx="19" cy="17" r="9" /><circle cx="86" cy="17" r="9" /><path className="cut-emergency-light" d="M68-28h16" /></g>
       <g className="cut-ambulance" transform="translate(675 596)"><path d="M0-29h64l24 18v29H0Z" /><rect x="7" y="-23" width="42" height="22" /><path className="cut-med-cross" d="M28-18v14m-7-7h14" /><path d="M65-22l17 14H65Z" /><circle cx="17" cy="18" r="9" /><circle cx="72" cy="18" r="9" /><path className="cut-emergency-light" d="M55-32h17" /></g>

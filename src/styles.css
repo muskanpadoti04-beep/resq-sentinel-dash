@@ -207,8 +207,8 @@ button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible
 .cutaway-panel .oi-map-title { position: relative; inset: auto; margin: 12px 12px 0; flex-shrink: 0; gap: 12px; }
 .cutaway-panel .map-title strong { font-size: 13px; }
 .cutaway-panel .map-switch .fg-button { min-height: 31px; }
-.cutaway-scene { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.cutaway-svg { width: 100%; flex: 1; min-height: 500px; display: block; overflow: visible; }
+.cutaway-scene { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+.cutaway-svg { width: 100%; aspect-ratio: 930 / 720; max-height: 850px; min-height: 500px; display: block; overflow: visible; }
 .cutaway-svg text { font-family: var(--font-mono); letter-spacing: 0; pointer-events: none; }
 .cut-site { fill: color-mix(in oklab, var(--secondary) 65%, var(--background)); stroke: var(--map-line-soft); }
 .cut-road { fill: none; stroke: var(--muted); stroke-width: 22; }
