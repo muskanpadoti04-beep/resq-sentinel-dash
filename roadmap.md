@@ -11,6 +11,8 @@
 - [x] Restore comfortable dashboard spacing and independent panel scrolling
 - [x] Improve the layered building detail and scale
 - [x] Revalidate the updated desktop and mobile dashboard
-- [ ] Add Occupant Intelligence
-- [ ] Rebuild dashboard like new reference (KPI strip, map layers, active incident, occupants, teams, medical, cameras, timeline) with all clicks opening full data
+- [x] Add Occupant Intelligence
+- [x] Rebuild dashboard like new reference (KPI strip, map layers, active incident, occupants, teams, medical, cameras, timeline) with all clicks opening full data
 - [x] Add AI Command: commander updates + occupant conditions → AI prioritized rescue actions
+- [ ] Build reference-style cutaway building with detailed rooms, stairs, exits and clickable floors
+- [ ] Verify cutaway floor, room, layer and simulation interactions
