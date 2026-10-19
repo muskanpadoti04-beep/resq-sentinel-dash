@@ -201,3 +201,105 @@ button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible
 .ai-rank{font-family:var(--font-mono);font-weight:700;color:var(--hazard);min-width:28px}
 .oi-topbar .topnav{min-width:0;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
 .oi-topbar .topnav button{flex-shrink:0}
+
+/* Reference-led architectural cutaway; shared command-center tokens. */
+.cutaway-panel { display: flex; flex-direction: column; border-radius: 8px; }
+.cutaway-panel .oi-map-title { position: relative; inset: auto; margin: 12px 12px 0; flex-shrink: 0; gap: 12px; }
+.cutaway-panel .map-title strong { font-size: 13px; }
+.cutaway-panel .map-switch .fg-button { min-height: 31px; }
+.cutaway-scene { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+.cutaway-svg { width: 100%; aspect-ratio: 930 / 720; max-height: 850px; min-height: 500px; display: block; overflow: visible; }
+.cutaway-svg text { font-family: var(--font-mono); letter-spacing: 0; pointer-events: none; }
+.cut-site { fill: color-mix(in oklab, var(--secondary) 65%, var(--background)); stroke: var(--map-line-soft); }
+.cut-road { fill: none; stroke: var(--muted); stroke-width: 22; }
+.cut-landscape path { fill: color-mix(in oklab, var(--safe) 23%, var(--background)); stroke: color-mix(in oklab, var(--safe) 40%, var(--background)); stroke-width: 2; }
+.cut-foundation polygon { fill: var(--secondary); stroke: var(--map-line); stroke-width: 2; }
+.cut-level { opacity: .88; transition: opacity .2s; }
+.cut-level.is-selected { opacity: 1; }
+.cut-floor-hit, .cut-room { cursor: pointer; outline: none; }
+.cut-floor-hit:focus-visible .cut-floor, .cut-floor-hit:hover .cut-floor { stroke: var(--foreground); stroke-width: 3; }
+.cut-floor { fill: color-mix(in oklab, var(--info) 12%, var(--card)); stroke: var(--map-line); stroke-width: 1.5; }
+.is-selected .cut-floor { fill: color-mix(in oklab, var(--info) 22%, var(--card)); stroke-width: 2.3; }
+.cut-slab-side { fill: var(--secondary); stroke: var(--map-line); stroke-width: 1.4; }
+.cut-back-wall { fill: color-mix(in oklab, var(--info) 16%, var(--card)); stroke: var(--map-line-soft); }
+.cut-left-wall { fill: url(#cut-glass); stroke: var(--map-line); }
+.cut-corridor { fill: color-mix(in oklab, var(--info) 20%, var(--secondary)); stroke: var(--map-line-soft); stroke-dasharray: 3 5; }
+.cut-room-floor { fill: color-mix(in oklab, var(--foreground) 7%, var(--card)); stroke: var(--map-line-soft); }
+.cut-room:hover .cut-room-floor, .cut-room:focus-visible .cut-room-floor { stroke: var(--foreground); stroke-width: 2.5; fill: color-mix(in oklab, var(--accent) 30%, var(--card)); }
+.cut-partition { fill: color-mix(in oklab, var(--info) 15%, transparent); stroke: var(--room-line); }
+.cut-partition-back { fill: color-mix(in oklab, var(--info) 20%, var(--card)); stroke: var(--room-line); }
+.cut-desk { fill: color-mix(in oklab, var(--info) 28%, var(--secondary)); stroke: var(--map-line); stroke-width: .8; }
+.cut-desk-leg { fill: none; stroke: var(--room-line); stroke-width: 2; }
+.cut-monitor { fill: var(--background); stroke: var(--info); stroke-width: 1.4; }
+.cut-chair { fill: var(--muted); stroke: var(--room-line); }
+.cut-rack-front { fill: var(--background); stroke: var(--info); }
+.cut-rack-side { fill: var(--secondary); stroke: var(--map-line-soft); }
+.cut-rack-light { stroke: var(--safe); stroke-width: 2; }
+.cut-room-label { fill: var(--foreground); font-size: 10px; font-weight: 600; }
+.cut-columns { pointer-events: none; }
+.cut-columns path { stroke: color-mix(in oklab, var(--info) 60%, var(--secondary)); stroke-width: 4; }
+.cut-glass-side { fill: color-mix(in oklab, var(--info) 5%, transparent); stroke: var(--map-line-soft); pointer-events: none; }
+.cut-beam { fill: none; stroke: var(--map-line); stroke-width: 5; pointer-events: none; }
+.cut-floor-label path:first-child { fill: var(--background); stroke: var(--map-line); }
+.cut-floor-label text { fill: var(--info); font-size: 13px; font-weight: 700; }
+.cut-floor-label .cut-label-sub { fill: var(--muted-foreground); font-size: 9px; }
+.cut-floor-label .cut-leader { fill: none; stroke: var(--map-line); stroke-width: 1; }
+.is-selected .cut-floor-label path:first-child { fill: color-mix(in oklab, var(--accent) 20%, var(--background)); stroke-width: 2; }
+.is-incident .cut-floor-label text:first-of-type { fill: var(--hazard); }
+.cut-person { stroke: var(--safe); fill: var(--safe); stroke-width: 2.6; pointer-events: none; }
+.cut-person.at-risk { stroke: var(--warning); fill: var(--warning); }
+.hot .cut-person.at-risk { stroke: var(--fire-core); fill: var(--fire-core); }
+.cut-person path { fill: none; }
+.cut-stair-base { fill: var(--secondary); stroke: var(--info); }
+.cut-stair-step { fill: color-mix(in oklab, var(--info) 30%, var(--secondary)); stroke: var(--room-line); stroke-width: .9; }
+.cut-stair-rail { fill: none; stroke: var(--info); stroke-width: 1.7; }
+.cut-exit-sign rect { fill: var(--safe); stroke: var(--route-bright); }
+.cut-exit-sign text { fill: var(--background); font-size: 9px; font-weight: 800; }
+.blocked .cut-exit-sign rect { fill: var(--hazard); stroke: var(--hazard); }
+.blocked .cut-exit-sign text { fill: var(--foreground); font-size: 8px; }
+.blocked .cut-stair-rail { stroke: var(--hazard); }
+.cut-evac-route { fill: none; stroke: var(--safe); stroke-width: 3.5; stroke-dasharray: 8 5; animation: dash-flow 1s linear infinite; pointer-events: none; }
+.cut-responder-route { fill: none; stroke: var(--info); stroke-width: 4; stroke-dasharray: 10 8; animation: dash-flow 1s linear infinite; pointer-events: none; }
+.cut-camera { fill: var(--info); stroke: var(--foreground); stroke-width: 1; pointer-events: none; }
+.cut-sensor { fill: var(--safe); stroke: var(--foreground); stroke-width: 1.5; pointer-events: none; }
+.cut-risk.danger { fill: color-mix(in oklab, var(--hazard) 40%, transparent); }
+.cut-risk.warning { fill: color-mix(in oklab, var(--warning) 20%, transparent); }
+.hot .cut-partition-back { fill: color-mix(in oklab, var(--hazard) 24%, var(--card)); stroke: var(--hazard); }
+.cut-fire { pointer-events: none; }
+.cut-fire-aura { fill: url(#cut-fire-glow); }
+.cut-smoke { fill: color-mix(in oklab, var(--muted) 87%, transparent); opacity: .85; }
+.cut-flame { fill: var(--hazard); animation: fire-flicker .65s infinite alternate; }
+.cut-flame-inner { fill: var(--fire-core); }
+.cut-incident-label { pointer-events: none; }
+.cut-incident-label rect { fill: var(--background); stroke: var(--hazard); stroke-width: 1.6; }
+.cut-incident-label path { fill: none; stroke: var(--hazard); stroke-width: 1.4; }
+.cut-incident-label text { fill: var(--foreground); font-size: 10px; }
+.cut-incident-label text:first-of-type { fill: var(--hazard); font-size: 13px; font-weight: 800; }
+.cut-roof > polygon { fill: color-mix(in oklab, var(--info) 11%, var(--card)); stroke: var(--map-line); stroke-width: 2; }
+.cut-hvac { fill: var(--muted); stroke: var(--info); }
+.cut-hvac-side { fill: var(--secondary); stroke: var(--map-line-soft); }
+.cut-hvac-grille { fill: none; stroke: var(--room-line); stroke-width: 2; }
+.cut-antenna { fill: none; stroke: var(--info); stroke-width: 2; }
+.cut-engine { fill: var(--hazard); stroke: var(--foreground); stroke-width: 1; }
+.cut-engine rect, .cut-engine > path:nth-of-type(2) { fill: var(--background); }
+.cut-engine-ladder { fill: none; stroke: var(--room-line); stroke-width: 3; }
+.cut-engine circle, .cut-ambulance circle { fill: var(--background); stroke: var(--muted-foreground); stroke-width: 3; }
+.cut-ambulance { fill: color-mix(in oklab, var(--foreground) 80%, var(--info)); stroke: var(--info); }
+.cut-ambulance rect { fill: var(--secondary); }
+.cut-med-cross { fill: none; stroke: var(--hazard); stroke-width: 4; }
+.cut-emergency-light { stroke: var(--hazard); stroke-width: 5; }
+.cut-engine .cut-emergency-light { stroke: var(--info); }
+.cut-site-label { fill: var(--muted-foreground); font-size: 11px; }
+.cutaway-status { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 11px 16px; border-top: 1px solid var(--border); font: 10px var(--font-mono); color: var(--muted-foreground); }
+.cutaway-status .danger { color: var(--hazard); }.cutaway-status .safe { color: var(--safe); }
+@media (max-width: 1160px) {
+  .oi-topbar { grid-template-columns: 1fr; }
+  .cutaway-panel { min-height: 660px; }
+}
+@media (max-width: 780px) {
+  .cutaway-panel { min-height: 580px; }
+  .cutaway-panel .oi-map-title { flex-wrap: wrap; margin: 10px 10px 0; padding: 9px; }
+  .cutaway-panel .map-switch { flex-wrap: wrap; }
+  .cutaway-svg { min-height: 420px; }
+  .cutaway-status { font-size: 9px; padding: 9px; }
+}

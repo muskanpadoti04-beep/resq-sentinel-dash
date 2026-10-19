@@ -9,3 +9,4 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 - AI rescue planning runs server-side in src/lib/rescue-ai.* via Lovable AI Gateway (openai/gpt-6-astra, Responses API) — keeps the API key off the browser.
+- Render the 3D building through CutawayBuilding with a shared projection and dashboard-supplied floor, occupant, incident and layer state so geometry and interactions remain aligned.
