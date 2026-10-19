@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AiCommand } from "@/components/AiCommand";
+import { CutawayBuilding } from "@/components/CutawayBuilding";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -286,71 +287,19 @@ function CardHead({ icon, title, action, onAction }: { icon: IconName; title: st
 /* ---------------- Map ---------------- */
 
 function BuildingMap({ floor, setFloor, phase, layers, mode, setMode, navigating, openRoom }: { floor: FloorId; setFloor: (f: FloorId) => void; phase: number; layers: Record<LayerId, boolean>; mode: "3d" | "2d"; setMode: (m: "3d" | "2d") => void; navigating: boolean; openRoom: (id: string) => void }) {
-  const active = floor === "14" && phase > 0;
-  const fl = floors.find((f) => f.id === floor)!;
-  return <div className="building-panel">
+  const fl = floors.find((f) => f.id === floor);
+  if (!fl) return null;
+  return <div className="building-panel cutaway-panel">
     <div className="map-title oi-map-title">
-      <div><strong>{fl.label}</strong><span>Real-time AI Monitoring · Occupant Tracking · Rescue Coordination</span></div>
+      <div><strong>RESQ Tower · {fl.label}</strong><span>{floor === "15" ? "R&D Lab" : floor === "14" ? "Offices · Server Room" : floor === "13" ? "Meeting Rooms" : "Reception & Support"}</span></div>
       <div className="map-switch">
-        <button className={mode === "3d" ? "active" : ""} onClick={() => setMode("3d")}>3D View</button>
-        <button className={mode === "2d" ? "active" : ""} onClick={() => setMode("2d")}>2D Plan</button>
+        <Button className={mode === "3d" ? "active" : ""} onClick={() => setMode("3d")} aria-pressed={mode === "3d"}>3D View</Button>
+        <Button className={mode === "2d" ? "active" : ""} onClick={() => setMode("2d")} aria-pressed={mode === "2d"}>2D Plan</Button>
         <select value={floor} onChange={(e) => setFloor(e.target.value as FloorId)} aria-label="Select floor">{floors.map((f) => <option key={f.id} value={f.id}>{f.label}</option>)}</select>
       </div>
     </div>
     {mode === "2d" ? <FloorPlan2D floor={floor} phase={phase} layers={layers} navigating={navigating} openRoom={openRoom} /> :
-    <svg className="building-svg" viewBox="0 0 940 610" role="img" aria-label="Layered building map with occupants">
-      <defs>
-        <linearGradient id="glassTop" x1="0" y1="0" x2="1" y2="1"><stop stopColor="var(--map-glass-high)" /><stop offset="1" stopColor="var(--map-glass-low)" /></linearGradient>
-        <linearGradient id="glassSide" x1="0" y1="0" x2="0" y2="1"><stop stopColor="var(--map-side-high)" /><stop offset="1" stopColor="var(--map-side-low)" /></linearGradient>
-        <linearGradient id="routeGlow" x1="0" y1="0" x2="1" y2="0"><stop stopColor="var(--safe)" /><stop offset="1" stopColor="var(--route-bright)" /></linearGradient>
-        <linearGradient id="miniGlass" x1="0" y1="0" x2="1" y2="1"><stop stopColor="var(--map-glass-high)" /><stop offset="1" stopColor="var(--map-side-low)" /></linearGradient>
-        <radialGradient id="fireGlow"><stop stopColor="var(--fire-core)" /><stop offset=".35" stopColor="var(--hazard)" /><stop offset="1" stopColor="transparent" /></radialGradient>
-        <filter id="softGlow"><feGaussianBlur stdDeviation="4" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-      </defs>
-      <path className="city-shadow" d="M105 478 458 586 861 416 503 317Z" />
-      <g className="trees"><circle cx="110" cy="476" r="16" /><circle cx="148" cy="499" r="19" /><circle cx="771" cy="468" r="18" /><circle cx="822" cy="437" r="15" /><circle cx="706" cy="504" r="21" /></g>
-      <path className="road" d="M62 524 418 607 900 437" />
-      <g className="firetruck"><rect x="126" y="520" width="58" height="27" rx="3" /><rect x="157" y="510" width="22" height="15" /><circle cx="139" cy="550" r="5" /><circle cx="175" cy="550" r="5" /></g>
-      <g className="ambulance-map"><rect x="800" y="470" width="44" height="22" rx="3" /><path d="M818 476v10M813 481h10" /></g>
-      {layers.routes && <path className="hospital-route" d="M790 486 700 520" />}
-      {layers.routes && <text className="map-note" x="760" y="530">To Hospital · 2.4 km · 6 min</text>}
-
-      <FloorLayer y={318} label="Ground Floor" active={floor === "G"} layers={layers} />
-      <FloorLayer y={241} label="13th Floor" active={floor === "13"} layers={layers} />
-      <FloorLayer y={164} label="14th Floor" active={floor === "14"} incident={active} phase={phase} layers={layers} />
-      <FloorLayer y={87} label="15th Floor" active={floor === "15"} layers={layers} />
-
-      <g className="elevator-shaft"><path d="M528 117 642 145 642 441 528 411Z" /></g>
-      {layers.routes && <g className="vertical-routes"><path d="M614 372 653 352 655 224 702 206" /><path d="M282 430 282 224 335 204" /></g>}
-      {navigating && <path className="nav-route" d="M160 450 282 430 282 240 380 215 470 205 520 200" />}
-
-      {active && layers.heatmap && <ellipse className="heat-zone" cx="500" cy="200" rx="220" ry="70" />}
-      {active && layers.fire && <g className="incident-overlays" filter="url(#softGlow)">
-        <path className="hot-zone" d="M468 161 613 196 560 239 414 201Z" />
-        <ellipse className="fire-aura" cx="535" cy="198" rx="98" ry="68" />
-        <path className="fire-core" d="M532 224c-34-18-26-56-4-77 2 21 16 28 16 45 9-17 9-38 2-58 41 31 58 80 22 101-13 8-25 3-36-11Z" />
-      </g>}
-
-      {floor === "14" && layers.occupants && <g className="people">
-        {([[505, 214], [520, 222], [556, 216], [566, 206]] as [number, number][]).map(([x, y], i) => <Person key={i} x={x} y={y} tone="danger" />)}
-        <Person x={640} y={196} tone="warning" />
-        <Person x={360} y={212} tone="warning" /><Person x={376} y={218} tone="warning" />
-      </g>}
-
-      {floor === "14" && layers.occupants && rooms.map((r) => {
-        const n = occupants.filter((o) => o.room === r.id).length;
-        return <g key={r.id} className={`room-tag ${r.tone}`} transform={`translate(${r.x} ${r.y})`} onClick={() => openRoom(r.id)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter") openRoom(r.id); }}>
-          <rect width="98" height="46" rx="5" /><text x="9" y="16" className="t1">{r.id}</text><text x="9" y="31" className="t2">{n} {n === 1 ? "person" : "people"}</text><text x="9" y="42" className="t3">{active ? r.status : "Monitoring"}</text>
-        </g>;
-      })}
-
-      {floor === "14" && active && phase >= 4 && layers.blocked && <g className="stair-tag danger" transform="translate(176 150)"><rect width="78" height="36" rx="5" /><text x="8" y="15">Stair A</text><text x="8" y="29">✕ Blocked</text></g>}
-      {floor === "14" && layers.routes && <g className="stair-tag safe" transform="translate(770 210)"><rect width="84" height="36" rx="5" /><text x="8" y="15">Stair B</text><text x="8" y="29">Available</text></g>}
-      {floor === "14" && phase >= 6 && <g className="team-tag" transform="translate(400 250)"><rect width="84" height="32" rx="5" /><text x="10" y="14">Team B</text><text x="10" y="26">{navigating ? "Navigating" : "En Route"}</text></g>}
-      {layers.cameras && floor === "14" && <g className="cam-pins">{[[430, 176], [610, 186], [330, 196]].map(([x, y]) => <g key={x} transform={`translate(${x} ${y})`}><rect x="-6" y="-4" width="12" height="8" rx="2" /></g>)}</g>}
-      <MapCallout x={120} y={438} text="Main Entrance" />
-      <g className="floor-ticks"><FloorTick y={102} label="15th Floor" active={floor === "15"} /><FloorTick y={179} label="14th Floor" active={floor === "14"} /><FloorTick y={256} label="13th Floor" active={floor === "13"} /><FloorTick y={333} label="Ground Floor" active={floor === "G"} /></g>
-    </svg>}
+      <CutawayBuilding floor={floor} setFloor={setFloor} phase={phase} layers={layers} navigating={navigating} occupants={occupants} openRoom={openRoom} />}
   </div>;
 }
 
