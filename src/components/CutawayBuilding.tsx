@@ -72,7 +72,7 @@ export function CutawayBuilding({ floor, phase, layers, navigating, occupants, s
         const base = level.base;
         return <g key={level.id} className={`cut-level ${selected ? "is-selected" : ""} ${burning ? "is-incident" : ""}`}>
           <g role="button" tabIndex={0} aria-label={`Select ${level.name}`} aria-pressed={selected} className="cut-floor-hit" onClick={() => setFloor(level.id)} onKeyDown={e => activate(e, () => setFloor(level.id))}>
-            <title>{level.name} — {level.use}</title>
+            <title>{`${level.name} — ${level.use}`}</title>
             <polygon className="cut-back-wall" points={polygon([[0, 220, 0], [460, 220, 0], [460, 220, 75], [0, 220, 75]], base)} />
             <polygon className="cut-left-wall" points={polygon([[0, 0, 0], [0, 220, 0], [0, 220, 75], [0, 0, 75]], base)} />
             <polygon className="cut-slab-side" points={polygon([[0, 0, 0], [460, 0, 0], [460, 0, -10], [0, 0, -10]], base)} />
@@ -89,7 +89,7 @@ export function CutawayBuilding({ floor, phase, layers, navigating, occupants, s
             const hot = burning && id === "14B-201";
             const [tx, ty] = point(u + 3, 5, base, 5);
             return <g key={id} role="button" tabIndex={0} aria-label={`Open room ${id}`} className={`cut-room ${hot ? "hot" : ""}`} onClick={() => { setFloor(level.id); openRoom(id); }} onKeyDown={e => activate(e, () => { setFloor(level.id); openRoom(id); })}>
-              <title>{id} · {list.length} occupants{hot ? " · Fire detected" : ""}</title>
+              <title>{`${id} · ${list.length} occupants${hot ? " · Fire detected" : ""}`}</title>
               <polygon className="cut-room-floor" points={box(u, 8, 104, 88, base)} />
               {layers.heatmap && burning && <polygon className={`cut-risk ${hot ? "danger" : "warning"}`} points={box(u, 8, 104, 88, base)} />}
               <polygon className="cut-partition" points={polygon([[u, 18, 0], [u, 95, 0], [u, 95, 47], [u, 18, 47]], base)} />
